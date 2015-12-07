@@ -1,0 +1,3 @@
+#!/bin/bash
+
+swipl -q -s hmr2hml.pl -t "hmr2hml('$1', '$2')."
