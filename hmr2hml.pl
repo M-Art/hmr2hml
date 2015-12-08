@@ -4,6 +4,7 @@
 :- dynamic(intent/1).
 :- op(900, fx, writeln).
 :- op(910, fy, -->).
+:- op(850, xfy, ~).
 
 hmr2hml(InputFileName, OutputFileName) :-
     consult(InputFileName),
@@ -28,6 +29,10 @@ hml_tag_open :-
 hml_tag_close :-
     writeln '</hml>'.
 
+writeln(Format ~ Arguments) :-
+    writeln_argument_list(Arguments, ArgumentList),
+    format(atom(String), Format, ArgumentList),
+    writeln String.
 writeln(String) :-
     file_stream(FileStream),
     intent_string(IntentString),
@@ -35,6 +40,10 @@ writeln(String) :-
     write(FileStream, IntentString),
     write(FileStream, String),
     write(FileStream, '\n').
+
+writeln_argument_list(Argument ~ Arguments, [Argument|ArgumentList]) :-
+    writeln_argument_list(Arguments, ArgumentList), !.
+writeln_argument_list(Argument, [Argument]).
 
 add_intent :-
     intent(Intent),
