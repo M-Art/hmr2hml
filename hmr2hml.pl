@@ -2,7 +2,9 @@
 
 :- dynamic(file_stream/1).
 :- dynamic(intent/1).
-:- op(900, fx, writeln).
+:- dynamic(intent_factor/1).
+:- op(900, fx, fwriteln).
+:- op(900, fx, fwrite).
 :- op(910, fy, -->).
 :- op(850, xfy, ~).
 
@@ -13,6 +15,7 @@ hmr2hml(InputFileName, OutputFileName) :-
 
     assert(file_stream(FileStream)),
     assert(intent(0)),
+    assert(intent_factor(1)),
 
     xml,
     hml_tag_open,
@@ -21,25 +24,33 @@ hmr2hml(InputFileName, OutputFileName) :-
     close(FileStream).
 
 xml :-
-    writeln '<?xml version="1.0" encoding="UTF-8"?>'.
+    fwriteln '<?xml version="1.0" encoding="UTF-8"?>'.
 
 hml_tag_open :-
-    writeln '<hml version="2.0">'.
+    fwriteln '<hml version="2.0">'.
 
 hml_tag_close :-
-    writeln '</hml>'.
+    fwriteln '</hml>'.
 
-writeln(Format ~ Arguments) :-
+fwriteln(Content) :-
+    file_stream(FileStream),
+    fwrite(Content),
+    write(FileStream, '\n'),
+    retractall(intent_factor(_)),
+    assert(intent_factor(1)).
+
+fwrite(Format ~ Arguments) :-
     writeln_argument_list(Arguments, ArgumentList),
     format(atom(String), Format, ArgumentList),
-    writeln String.
-writeln(String) :-
+    fwrite String, !.
+fwrite(String) :-
     file_stream(FileStream),
     intent_string(IntentString),
 
     write(FileStream, IntentString),
     write(FileStream, String),
-    write(FileStream, '\n').
+    retractall(intent_factor(_)),
+    assert(intent_factor(0)).
 
 writeln_argument_list(Argument ~ Arguments, [Argument|ArgumentList]) :-
     writeln_argument_list(Arguments, ArgumentList), !.
@@ -61,7 +72,9 @@ remove_intent.
 
 intent_string(String) :-
     intent(Intent),
-    intent_string(Intent, String).
+    intent_factor(IntentFactor),
+    IntentWithFactor is Intent * IntentFactor,
+    intent_string(IntentWithFactor,  String).
 intent_string(0, '').
 intent_string(Intent, String) :-
     Intent > 0,
