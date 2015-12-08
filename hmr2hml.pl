@@ -7,6 +7,8 @@
 :- op(900, fx, fwrite).
 :- op(910, fy, -->).
 :- op(850, xfy, ~).
+:- op(900, xfx, forKey).
+:- op(850, xfx, inDict).
 
 hmr2hml(InputFileName, OutputFileName) :-
     consult(InputFileName),
@@ -31,6 +33,9 @@ hml_tag_open :-
 
 hml_tag_close :-
     fwriteln '</hml>'.
+
+forKey(Value, Key inDict Dict) :-
+    member(Key : Value, Dict).
 
 fwriteln(Content) :-
     file_stream(FileStream),
