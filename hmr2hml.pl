@@ -2,6 +2,7 @@
 
 :- dynamic(file_stream/1).
 :- dynamic(intent/1).
+:- op(910, fx, -->).
 
 hmr2hml(InputFileName, OutputFileName) :-
     consult(InputFileName),
@@ -58,3 +59,7 @@ intent_string(Intent, String) :-
     intent_string(NewIntent, AccumulatedIntentString),
     string_concat(AccumulatedIntentString, '    ', String).
 
+-->(Goal) :-
+    add_intent,
+    call(Goal),
+    remove_intent.
