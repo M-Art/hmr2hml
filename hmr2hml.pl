@@ -3,7 +3,7 @@
 :- dynamic(file_stream/1).
 :- dynamic(intent/1).
 :- op(900, fx, writeln).
-:- op(910, fx, -->).
+:- op(910, fy, -->).
 
 hmr2hml(InputFileName, OutputFileName) :-
     consult(InputFileName),
