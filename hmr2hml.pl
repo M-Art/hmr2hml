@@ -21,6 +21,7 @@ hmr2hml(InputFileName, OutputFileName) :-
 
     xml,
     hml_tag_open,
+    --> types,
     hml_tag_close,
     
     close(FileStream).
@@ -33,6 +34,40 @@ hml_tag_open :-
 
 hml_tag_close :-
     fwriteln '</hml>'.
+
+types :-
+    fwriteln '<types>',
+    --> type,
+    fwriteln '</types>'.
+
+type :-
+    xtype Dict,
+    Name forKey name inDict Dict,
+    Base forKey base inDict Dict,
+
+    fwrite '<type id="tpe_~w" name="~w" base="~w"' ~ Name ~ Name ~ Base,
+    type_length(Dict),
+    type_scale(Dict),
+    fwriteln '>',
+    --> type_description(Dict),
+    fwriteln '</type>',
+    fail.
+type.
+
+type_length(Dict) :-
+    Length forKey length inDict Dict,
+    fwrite ' length="~w"' ~ Length, !.
+type_length(_).
+type_scale(Dict) :-
+    Scale forKey scale inDict Dict,
+    fwrite ' scale="~w"' ~ Scale, !.
+type_scale(_).
+
+type_description(Dict) :-
+    Desc forKey desc inDict Dict,
+    fwriteln '<desc>~w</desc>' ~ Desc,
+    !.
+type_description(_).
 
 forKey(Value, Key inDict Dict) :-
     member(Key : Value, Dict).
