@@ -2,6 +2,7 @@
 
 :- dynamic(file_stream/1).
 :- dynamic(intent/1).
+:- op(900, fx, writeln).
 :- op(910, fx, -->).
 
 hmr2hml(InputFileName, OutputFileName) :-
@@ -19,13 +20,13 @@ hmr2hml(InputFileName, OutputFileName) :-
     close(FileStream).
 
 xml :-
-    writeln('<?xml version="1.0" encoding="UTF-8"?>').
+    writeln '<?xml version="1.0" encoding="UTF-8"?>'.
 
 hml_tag_open :-
-    writeln('<hml version="2.0">').
+    writeln '<hml version="2.0">'.
 
 hml_tag_close :-
-    writeln('</hml>').
+    writeln '</hml>'.
 
 writeln(String) :-
     file_stream(FileStream),
