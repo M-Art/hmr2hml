@@ -2,6 +2,7 @@
 :- ensure_loaded(fwrite).
 :- ensure_loaded(dictionary).
 :- ensure_loaded(types).
+:- ensure_loaded(attributes).
 
 hmr2hml(InputFileName, OutputFileName) :-
     consult(InputFileName),
@@ -10,6 +11,7 @@ hmr2hml(InputFileName, OutputFileName) :-
     xml,
     hml_tag_open,
     --> types,
+    --> attributes,
     hml_tag_close,
     
     fclose.
