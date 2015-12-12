@@ -50,6 +50,7 @@ type :-
     type_scale(Dict),
     fwriteln '>',
     --> type_description(Dict),
+    --> type_domain(Dict),
     fwriteln '</type>',
     fail.
 type.
@@ -68,6 +69,42 @@ type_description(Dict) :-
     fwriteln '<desc>~w</desc>' ~ Desc,
     !.
 type_description(_).
+
+type_domain(Dict) :-
+    Domain forKey domain inDict Dict,
+    fwrite '<domain',
+    type_domain_ordered(Dict),
+    fwriteln '>',
+    --> type_domain_value(Dict),
+    fwriteln '</domain>',
+    !.
+type_domain(_).
+
+type_domain_ordered(Dict) :-
+    Ordered forKey ordered inDict Dict,
+    fwrite ' ordered="~w"' ~ Ordered,
+    !.
+type_domain_ordered(_).
+
+type_domain_value(Dict) :-
+    Domain forKey domain inDict Dict,
+    Domain = [L to H],
+    fwriteln '<value from="~w" to="~w"/>' ~ L ~ H,
+    !.
+type_domain_value(Dict) :-
+    Domain forKey domain inDict Dict,
+    is_list(Domain),
+    type_domain_value_list(Domain),
+    !.
+type_domain_value(_).
+
+type_domain_value_list([]).
+type_domain_value_list([Val/Num|ValueList]) :-
+    !, fwriteln '<value is="~w" num="~w"/>' ~ Val ~ Num,
+    type_domain_value_list(ValueList).
+type_domain_value_list([Val|ValueList]) :-
+    !, fwriteln '<value is="~w"/>' ~ Val,
+    type_domain_value_list(ValueList).
 
 forKey(Value, Key inDict Dict) :-
     member(Key : Value, Dict).
