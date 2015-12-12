@@ -104,11 +104,9 @@ add_intent :-
 
 remove_intent :-
     intent(Intent),
-    Intent > 0,
     NewIntent is Intent - 1,
     retractall(intent(_)),
     assert(intent(NewIntent)).
-remove_intent.
 
 intent_string(String) :-
     intent(Intent),
