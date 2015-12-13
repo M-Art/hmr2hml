@@ -41,6 +41,7 @@ table_rules(_).
 table_rule(TableName, Num) :-
     xrule TableName/Num : Conditions ==> Decisions : Link,
     table_rule_conditions(Conditions),
+    table_rule_link(Link),
     !.
 table_rule(TableName, Num) :-
     xrule TableName/Num : Conditions ==> Decisions,
@@ -77,3 +78,7 @@ table_rule_condition_relation_set([Value|Values]) :-
 table_rule_condition_relation_set(Value) :-
     fwriteln '<value is="~w"/>' ~ Value.
 
+table_rule_link(Link) :-
+    fwriteln '<link>',
+    --> fwriteln '<tabref ref="tab_~w"/>' ~ Link,
+    fwriteln '</link>'.
