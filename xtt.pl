@@ -41,11 +41,13 @@ table_rules(_).
 table_rule(TableName, Num) :-
     xrule TableName/Num : Conditions ==> Decisions : Link,
     table_rule_conditions(Conditions),
+    table_rule_decisions(Decisions),
     table_rule_link(Link),
     !.
 table_rule(TableName, Num) :-
     xrule TableName/Num : Conditions ==> Decisions,
     table_rule_conditions(Conditions),
+    table_rule_decisions(Decisions),
     !.
 
 table_rule_conditions(Conditions) :-
@@ -82,3 +84,49 @@ table_rule_link(Link) :-
     fwriteln '<link>',
     --> fwriteln '<tabref ref="tab_~w"/>' ~ Link,
     fwriteln '</link>'.
+
+table_rule_decisions(Decisions) :-
+    fwriteln '<decision>',
+    --> table_rule_decision(Decisions),
+    fwriteln '</decision>'.
+
+table_rule_decision([]).
+table_rule_decision([Decision|Decisions]) :-
+    table_rule_decision_trans(Decision),
+    table_rule_decision(Decisions).
+
+table_rule_decision_trans(Attr set Value) :-
+    fwriteln '<trans>',
+    --> fwriteln '<attref ref="attr_~w"/>' ~ Attr,
+    --> table_rule_decision_trans_value(Value),
+    fwriteln '</trans>'.
+
+table_rule_decision_trans_value(Value) :-
+    atom(Value),
+    fwriteln '<set>',
+    --> fwriteln '<value is="~w"/>' ~ Value,
+    fwriteln '</set>',
+    !.
+table_rule_decision_trans_value(Value) :-
+    table_rule_decision_trans_value_expr(Value).
+
+table_rule_decision_trans_value_expr(Value) :-
+    table_rule_decision_trans_value_expr_binary(Value, Name, Val1, Val2),
+    fwriteln '<expr name="~w">' ~ Name,
+    --> table_rule_decision_trans_value_expr(Val1),
+    --> table_rule_decision_trans_value_expr(Val2),
+    fwriteln '</expr>',
+    !.
+table_rule_decision_trans_value_expr(Value) :-
+    number(Value),
+    fwriteln '<value is="~w"/>' ~ Value,
+    !.
+table_rule_decision_trans_value_expr(Value) :-
+    fwriteln '<attref ref="attr_~w"/>' ~ Value,
+    !.
+
+table_rule_decision_trans_value_expr_binary(Val1 + Val2, add, Val1, Val2).
+table_rule_decision_trans_value_expr_binary(Val1 - Val2, sub, Val1, Val2).
+table_rule_decision_trans_value_expr_binary(Val1 * Val2, mul, Val1, Val2).
+table_rule_decision_trans_value_expr_binary(Val1 / Val2, div, Val1, Val2).
+
