@@ -28,8 +28,10 @@ table_schema_precondition([Precondition|Preconditions]) :-
     fwriteln '<attref ref="attr_~w"/>' ~ Precondition,
     table_schema_precondition(Preconditions).
 
+table_schema_conclusion([]).
 table_schema_conclusion([Conclusion|Conclusions]) :-
-    fwriteln '<attref ref="attr_~w"/>' ~ Conclusion.
+    fwriteln '<attref ref="attr_~w"/>' ~ Conclusion,
+    table_schema_conclusion(Conclusions).
 
 table_rules(TableName) :-
     xrule TableName/Num : _ ==> _,
