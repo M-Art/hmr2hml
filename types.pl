@@ -34,7 +34,7 @@ type_description(Dict) :-
 type_description(_).
 
 type_domain(Dict) :-
-    Domain forKey domain inDict Dict,
+    _ forKey domain inDict Dict,
     fwrite '<domain',
     type_domain_ordered(Dict),
     fwriteln '>',
