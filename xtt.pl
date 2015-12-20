@@ -80,6 +80,11 @@ table_rule_condition_relation_set([Value|Values]) :-
 table_rule_condition_relation_set(Value) :-
     fwriteln '<value is="~w"/>' ~ Value.
 
+table_rule_link(Link/_) :-
+    fwriteln '<link>',
+    --> fwriteln '<tabref ref="tab_~w"/>' ~ Link,
+    fwriteln '</link>',
+    !.
 table_rule_link(Link) :-
     fwriteln '<link>',
     --> fwriteln '<tabref ref="tab_~w"/>' ~ Link,
