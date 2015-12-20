@@ -72,15 +72,18 @@ table_rule_condition_relation(Condition) :-
     --> fwriteln '</set>',
     fwriteln '</relation>'.
 
-table_rule_condition_relation_set([]).
-table_rule_condition_relation_set([L to H]) :-
-    fwriteln '<value from="~w" to="~w"/>' ~ L ~ H,
-    !.
+table_rule_condition_relation_set([]) :- !.
 table_rule_condition_relation_set([Value|Values]) :-
-    table_rule_condition_relation_set(Value),
+    table_rule_condition_relation_set_value(Value),
     table_rule_condition_relation_set(Values),
     !.
 table_rule_condition_relation_set(Value) :-
+    table_rule_condition_relation_set_value(Value).
+
+table_rule_condition_relation_set_value(L to H) :-
+    fwriteln '<value from="~w" to="~w"/>' ~ L ~ H,
+    !.
+table_rule_condition_relation_set_value(Value) :-
     fwriteln '<value is="~w"/>' ~ Value.
 
 table_rule_link(Link/_) :-
