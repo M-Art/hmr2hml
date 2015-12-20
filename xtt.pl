@@ -107,7 +107,7 @@ table_rule_decision_trans(Attr set Value) :-
     fwriteln '</trans>'.
 
 table_rule_decision_trans_value(Value) :-
-    atom(Value),
+    number(Value),
     fwriteln '<set>',
     --> fwriteln '<value is="~w"/>' ~ Value,
     fwriteln '</set>',
